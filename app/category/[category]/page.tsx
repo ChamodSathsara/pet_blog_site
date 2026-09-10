@@ -5,8 +5,7 @@ import { PageHero } from '@/components/PageHero';
 import { PostCard } from '@/components/PostCard';
 import { AdSlot } from '@/components/AdSlot';
 import { Newsletter } from '@/components/Newsletter';
-import { categories } from '@/lib/data/categories';
-import { getCategory, getPostsByCategory } from '@/lib/utils/posts';
+import { getCategories, getCategoryBySlug, getPublishedPostsByCategory } from '@/lib/db/queries';
 import { buildMetadata } from '@/lib/seo';
 import { cn } from '@/lib/utils/cn';
 
@@ -14,12 +13,14 @@ interface CategoryPageProps {
   params: { category: string };
 }
 
-export function generateStaticParams() {
-  return categories.map((category) => ({ category: category.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getCategories()).map((category) => ({ category: category.slug }));
 }
 
-export function generateMetadata({ params }: CategoryPageProps): Metadata {
-  const category = getCategory(params.category);
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const category = await getCategoryBySlug(params.category);
   if (!category) {
     return buildMetadata({
       title: 'Category not found',
@@ -35,11 +36,10 @@ export function generateMetadata({ params }: CategoryPageProps): Metadata {
   });
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = getCategory(params.category);
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const category = await getCategoryBySlug(params.category);
   if (!category) notFound();
-
-  const categoryPosts = getPostsByCategory(category.slug);
+  const [categoryPosts, categories] = await Promise.all([getPublishedPostsByCategory(category.slug), getCategories()]);
 
   return (
     <>

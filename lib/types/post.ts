@@ -25,6 +25,7 @@ export interface Post {
   coverImage: string;
   coverAlt: string;
   category: string;
+  categoryName?: string;
   tags: string[];
   author: string;
   featured?: boolean;

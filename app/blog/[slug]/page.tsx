@@ -11,21 +11,23 @@ import { AdSlot } from '@/components/AdSlot';
 import { PostCard } from '@/components/PostCard';
 import { Newsletter } from '@/components/Newsletter';
 import { JsonLd } from '@/components/JsonLd';
-import { posts } from '@/lib/data/posts';
-import { formatDate, getAuthor, getCategory, getPostBySlug, getPostReadTime, getRelatedPosts } from '@/lib/utils/posts';
+import { formatDate, getPostReadTime } from '@/lib/utils/posts';
+import { getPublishedPost, getPublishedPosts, getRelatedPublishedPosts } from '@/lib/db/queries';
 import { articleJsonLd, breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 
 interface PostPageProps {
   params: { slug: string };
 }
 
-export function generateStaticParams() {
-  return posts.map((post) => ({ slug: post.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getPublishedPosts()).map((post) => ({ slug: post.slug }));
 }
 
-export function generateMetadata({ params }: PostPageProps): Metadata {
-  const post = getPostBySlug(params.slug);
-  if (!post) {
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const result = await getPublishedPost(params.slug);
+  if (!result) {
     return buildMetadata({
       title: 'Article not found',
       description: 'This article could not be found.',
@@ -34,7 +36,7 @@ export function generateMetadata({ params }: PostPageProps): Metadata {
     });
   }
 
-  const author = getAuthor(post.author);
+  const { post, author } = result;
   return buildMetadata({
     title: post.title,
     description: post.excerpt,
@@ -47,13 +49,11 @@ export function generateMetadata({ params }: PostPageProps): Metadata {
   });
 }
 
-export default function PostPage({ params }: PostPageProps) {
-  const post = getPostBySlug(params.slug);
-  if (!post) notFound();
-
-  const author = getAuthor(post.author);
-  const category = getCategory(post.category);
-  const related = getRelatedPosts(post, 2);
+export default async function PostPage({ params }: PostPageProps) {
+  const result = await getPublishedPost(params.slug);
+  if (!result) notFound();
+  const { post, author, category } = result;
+  const related = await getRelatedPublishedPosts(post.slug, category.id, post.tags, 2);
   const readTime = getPostReadTime(post);
 
   return (

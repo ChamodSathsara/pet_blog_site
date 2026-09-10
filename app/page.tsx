@@ -5,8 +5,8 @@ import { ArrowRight, Clock, HeartHandshake, Stethoscope } from 'lucide-react';
 import { PostCard } from '@/components/PostCard';
 import { Newsletter } from '@/components/Newsletter';
 import { AdSlot } from '@/components/AdSlot';
-import { categories } from '@/lib/data/categories';
-import { formatDate, getAllPosts, getCategory, getFeaturedPost, getPostReadTime } from '@/lib/utils/posts';
+import { formatDate, getPostReadTime } from '@/lib/utils/posts';
+import { getCategories, getPublishedPosts } from '@/lib/db/queries';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
@@ -34,10 +34,14 @@ const trustPoints = [
   },
 ];
 
-export default function Home() {
-  const featured = getFeaturedPost();
-  const featuredCategory = getCategory(featured.category);
-  const latest = getAllPosts().filter((post) => post.slug !== featured.slug);
+export const revalidate = 60;
+
+export default async function Home() {
+  const [allPosts, categories] = await Promise.all([getPublishedPosts(), getCategories()]);
+  const featured = allPosts[0];
+  if (!featured) return <div className="container py-20"><h1 className="font-serif text-3xl">No articles published yet</h1></div>;
+  const featuredCategory = { slug: featured.category, name: featured.categoryName || featured.category };
+  const latest = allPosts.filter((post) => post.slug !== featured.slug);
 
   return (
     <>

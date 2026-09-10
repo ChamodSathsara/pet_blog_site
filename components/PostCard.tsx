@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock } from 'lucide-react';
 import type { Post } from '@/lib/types/post';
-import { formatDate, getCategory, getPostReadTime } from '@/lib/utils/posts';
+import { formatDate, getPostReadTime } from '@/lib/utils/posts';
 import { cn } from '@/lib/utils/cn';
 
 interface PostCardProps {
@@ -13,7 +13,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, variant = 'default', className, headingLevel = 'h3' }: PostCardProps) {
-  const category = getCategory(post.category);
+  const category = post.categoryName ? { slug: post.category, name: post.categoryName } : null;
   const readTime = getPostReadTime(post);
   const Heading = headingLevel;
 

@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { PageHero } from '@/components/PageHero';
 import { BlogClient } from './BlogClient';
 import { buildMetadata } from '@/lib/seo';
+import { getCategories, getPublishedPosts } from '@/lib/db/queries';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = buildMetadata({
   title: 'All Senior Pet Health Articles',
@@ -10,7 +13,8 @@ export const metadata: Metadata = buildMetadata({
   path: '/blog',
 });
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const [posts, categories] = await Promise.all([getPublishedPosts(), getCategories()]);
   return (
     <>
       <PageHero
@@ -18,7 +22,7 @@ export default function BlogPage() {
         title="Every guide, in one place"
         description="Long-form, veterinarian-reviewed explainers on the conditions that show up most in dogs and cats over seven. Filter by topic to find what applies to your pet."
       />
-      <BlogClient />
+      <BlogClient allPosts={posts} categories={categories} />
     </>
   );
 }

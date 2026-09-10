@@ -15,14 +15,17 @@ export function Newsletter({ variant = 'panel', className }: NewsletterProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setStatus('error');
       return;
     }
     setStatus('loading');
-    window.setTimeout(() => setStatus('done'), 700);
+    try {
+      const response = await fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email }) });
+      setStatus(response.ok ? 'done' : 'error');
+    } catch { setStatus('error'); }
   };
 
   const isInline = variant === 'inline';

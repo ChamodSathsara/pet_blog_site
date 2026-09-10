@@ -18,14 +18,14 @@ const topics = ['General question', 'Correction or accuracy concern', 'Article s
 export function ContactForm() {
   const [form, setForm] = useState<FormState>({ name: '', email: '', topic: topics[0], message: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
 
   const update = (key: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
     if (!form.name.trim()) nextErrors.name = 'Please tell us your name.';
@@ -37,7 +37,10 @@ export function ContactForm() {
       return;
     }
     setStatus('loading');
-    window.setTimeout(() => setStatus('done'), 800);
+    try {
+      const response = await fetch('/api/messages', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) });
+      setStatus(response.ok ? 'done' : 'error');
+    } catch { setStatus('error'); }
   };
 
   if (status === 'done') {
@@ -143,6 +146,7 @@ export function ContactForm() {
       <Button type="submit" size="lg" disabled={status === 'loading'} className="mt-6 h-11 px-6 text-base">
         {status === 'loading' ? 'Sending…' : 'Send message'}
       </Button>
+      {status === 'error' && <p role="alert" className="mt-3 text-sm text-destructive">We could not send your message. Please try again.</p>}
     </form>
   );
 }

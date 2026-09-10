@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next';
-import { posts } from '@/lib/data/posts';
-import { categories } from '@/lib/data/categories';
+import { getCategories, getPublishedPosts } from '@/lib/db/queries';
 import { SITE_URL } from '@/lib/seo';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [posts, categories] = await Promise.all([getPublishedPosts(), getCategories()]);
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/blog`, changeFrequency: 'daily', priority: 0.9 },

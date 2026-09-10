@@ -6,15 +6,13 @@ import { PostCard } from '@/components/PostCard';
 import { AdSlot } from '@/components/AdSlot';
 import { Newsletter } from '@/components/Newsletter';
 import { Button } from '@/components/ui/Button';
-import { categories } from '@/lib/data/categories';
-import { getAllPosts, getAllTags } from '@/lib/utils/posts';
+import type { Category, Post } from '@/lib/types/post';
 import { cn } from '@/lib/utils/cn';
 
 const PAGE_SIZE = 6;
 
-export function BlogClient() {
-  const allPosts = getAllPosts();
-  const tags = getAllTags();
+export function BlogClient({ allPosts, categories }: { allPosts: Post[]; categories: Category[] }) {
+  const tags = useMemo(() => Array.from(new Set(allPosts.flatMap((post) => post.tags))).sort(), [allPosts]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activeTag, setActiveTag] = useState<string>('all');
   const [page, setPage] = useState(1);

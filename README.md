@@ -2,6 +2,19 @@
 
 This is the Next.js (App Router) rebuild of the original Vite + React Router SPA.
 
+## Database and admin setup
+
+Create a git-ignored `.env.local` with `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `BLOB_READ_WRITE_TOKEN`. Then run:
+
+```bash
+npm install
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+Start the app and visit `/admin`; sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Production image uploads require a Vercel Blob read/write token. Local development falls back to `public/uploads`. Published post and category pages use 60-second ISR.
+
 ## Run it
 
 ```bash
