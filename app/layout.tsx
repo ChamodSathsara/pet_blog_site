@@ -1,0 +1,61 @@
+import type { Metadata } from 'next';
+import { Fraunces, Source_Sans_3 } from 'next/font/google';
+import './globals.css';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { JsonLd } from '@/components/JsonLd';
+import { SITE_NAME, SITE_URL, DEFAULT_IMAGE, websiteJsonLd } from '@/lib/seo';
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Senior Pet Health Guides`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description:
+    'Veterinarian-reviewed guides on senior dog arthritis, diabetic cat diets, breed-specific health risks, and knowing when an older pet needs a vet.',
+  applicationName: SITE_NAME,
+  openGraph: {
+    siteName: SITE_NAME,
+    type: 'website',
+    locale: 'en_US',
+    images: [{ url: DEFAULT_IMAGE }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@greymuzzleguide',
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={`${fraunces.variable} ${sourceSans.variable}`}>
+      <body className="flex min-h-screen w-full flex-col bg-background font-sans">
+        <JsonLd data={websiteJsonLd()} />
+        <Header />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
