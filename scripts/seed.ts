@@ -21,7 +21,7 @@ async function seed() {
     authorIds.set(author.id, row.id);
   }
   for (const post of posts) {
-    const values = { title: post.title, slug: post.slug, excerpt: post.excerpt, content: post.content, coverImageUrl: post.coverImage, coverAlt: post.coverAlt, categoryId: categoryIds.get(post.category)!, authorId: authorIds.get(post.author)!, tags: post.tags, status: 'published' as const, publishedAt: new Date(`${post.date}T12:00:00Z`), updatedAt: new Date() };
+    const values = { title: post.title, slug: post.slug, excerpt: post.excerpt, content: post.content, coverImageUrl: post.coverImage, coverAlt: post.coverAlt, categoryId: categoryIds.get(post.category)!, authorId: authorIds.get(post.author)!, tags: post.tags, status: 'published' as const, publishedAt: new Date(`${post.date}T12:00:00Z`) };
     await db.insert(postTable).values(values).onConflictDoUpdate({ target: postTable.slug, set: values });
   }
   const email = process.env.ADMIN_EMAIL?.toLowerCase(); const password = process.env.ADMIN_PASSWORD;

@@ -1,14 +1,14 @@
 import Link from 'next/link';
-import { PawPrint } from 'lucide-react';
+import { House } from 'lucide-react';
 
 export default function NotFound() {
   return (
     <div className="container flex flex-col items-center py-24 text-center">
       <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sage text-primary-foreground">
-        <PawPrint className="h-7 w-7" aria-hidden="true" />
+        <House className="h-7 w-7" aria-hidden="true" />
       </span>
       <h1 className="mt-6 font-serif text-[34px] font-semibold leading-tight text-foreground md:text-[44px]">
-        This page wandered off
+        This page needs a new address
       </h1>
       <p className="mx-auto mt-4 max-w-md text-[18px] leading-relaxed text-muted-foreground">
         The page you're looking for doesn't exist — it may have been moved or the link may be out of date.

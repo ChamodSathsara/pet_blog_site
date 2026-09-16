@@ -12,9 +12,11 @@ interface BuildMetadataInput {
   image?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
+  modifiedTime?: string;
   authorName?: string;
   tags?: string[];
   noIndex?: boolean;
+  canonicalUrl?: string;
 }
 
 /**
@@ -31,11 +33,13 @@ export function buildMetadata({
   image = DEFAULT_IMAGE,
   type = 'website',
   publishedTime,
+  modifiedTime,
   authorName,
   tags,
   noIndex = false,
+  canonicalUrl,
 }: BuildMetadataInput): Metadata {
-  const url = `${SITE_URL}${path}`;
+  const url = canonicalUrl || `${SITE_URL}${path}`;
   const fullTitle = `${title} | ${SITE_NAME}`;
 
   return {
@@ -57,6 +61,7 @@ export function buildMetadata({
       type,
       locale: 'en_US',
       ...(type === 'article' && publishedTime ? { publishedTime } : {}),
+      ...(type === 'article' && modifiedTime ? { modifiedTime } : {}),
       ...(type === 'article' && authorName ? { authors: [authorName] } : {}),
     },
     twitter: {
@@ -75,6 +80,7 @@ interface ArticleJsonLdInput {
   image: string;
   path: string;
   publishedTime: string;
+  modifiedTime?: string;
   authorName: string;
 }
 
@@ -84,15 +90,17 @@ export function articleJsonLd({
   image,
   path,
   publishedTime,
+  modifiedTime,
   authorName,
 }: ArticleJsonLdInput) {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: title,
     description,
     image: image.startsWith('http') ? image : `${SITE_URL}${image}`,
     datePublished: publishedTime,
+    dateModified: modifiedTime || publishedTime,
     author: { '@type': 'Person', name: authorName },
     publisher: {
       '@type': 'Organization',
@@ -109,11 +117,6 @@ export function websiteJsonLd() {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: `${SITE_URL}/blog?q={search_term_string}`,
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 

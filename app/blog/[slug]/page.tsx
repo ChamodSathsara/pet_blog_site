@@ -38,14 +38,17 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
   const { post, author } = result;
   return buildMetadata({
-    title: post.title,
-    description: post.excerpt,
+    title: post.seoTitle || post.title,
+    description: post.metaDescription || post.excerpt,
     path: `/blog/${post.slug}`,
     image: post.coverImage,
     type: 'article',
     publishedTime: post.date,
+    modifiedTime: post.updatedDate,
     authorName: author?.name,
     tags: post.tags,
+    noIndex: post.noIndex,
+    canonicalUrl: post.canonicalUrl,
   });
 }
 
@@ -65,6 +68,7 @@ export default async function PostPage({ params }: PostPageProps) {
           image: post.coverImage,
           path: `/blog/${post.slug}`,
           publishedTime: post.date,
+          modifiedTime: post.updatedDate,
           authorName: author?.name ?? 'Housewise Journal',
         })}
       />
@@ -120,7 +124,8 @@ export default async function PostPage({ params }: PostPageProps) {
                   <span className="font-medium text-foreground">{author.name}</span>
                 </span>
               )}
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
+              <time dateTime={post.date}>Published {formatDate(post.date)}</time>
+              {post.updatedDate && post.updatedDate !== post.date && <time dateTime={post.updatedDate}>Updated {formatDate(post.updatedDate)}</time>}
               <span className="inline-flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                 {readTime} min read
@@ -173,7 +178,7 @@ export default async function PostPage({ params }: PostPageProps) {
             )}
 
             <div className="mt-8 rounded-2xl border border-terracotta/30 bg-sand p-6">
-              <h2 className="font-serif text-lg font-semibold text-foreground">A note on medical advice</h2>
+              <h2 className="font-serif text-lg font-semibold text-foreground">A note on home-repair safety</h2>
               <p className="mt-2 text-[17px] leading-relaxed text-foreground/80">
                 This article is general education, not an on-site inspection. Conditions, codes, and risks vary by home; use a licensed professional when work exceeds your training or equipment. Read our full{' '}
                 <Link href="/disclaimer" className="font-medium text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary">

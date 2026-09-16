@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { boolean, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 export const postStatus = pgEnum('post_status', ['draft', 'published']);
 export const messageStatus = pgEnum('message_status', ['unread', 'read', 'replied']);
@@ -30,6 +30,10 @@ export const posts = pgTable('posts', {
   title: text('title').notNull(),
   slug: text('slug').notNull(),
   excerpt: text('excerpt').notNull(),
+  seoTitle: text('seo_title'),
+  metaDescription: text('meta_description'),
+  canonicalUrl: text('canonical_url'),
+  noIndex: boolean('no_index').default(false).notNull(),
   content: text('content').notNull(),
   coverImageUrl: text('cover_image_url'),
   coverAlt: text('cover_alt'),

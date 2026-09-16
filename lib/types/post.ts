@@ -21,7 +21,12 @@ export interface Post {
   title: string;
   slug: string;
   date: string;
+  updatedDate?: string;
   excerpt: string;
+  seoTitle?: string;
+  metaDescription?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
   coverImage: string;
   coverAlt: string;
   category: string;

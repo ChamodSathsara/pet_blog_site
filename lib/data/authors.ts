@@ -3,8 +3,8 @@ import type { Author } from '../types/post';
 export const authors: Author[] = [{
   id: 'daniel-brooks',
   name: 'Daniel Brooks',
-  credentials: 'Certified home inspector & renovation editor',
-  bio: 'Daniel has inspected and repaired homes for more than fifteen years. He reviews every guide for safe sequencing, realistic costs, and the point where a homeowner should stop and call a licensed professional.',
+  credentials: 'Home maintenance editor',
+  bio: 'Daniel edits practical home-maintenance guides for clear sequencing, realistic costs, and the point where a homeowner should stop and call a licensed professional.',
   avatar: '/cd705750-f0c6-45f9-a495-4b5cbf9e091f.jpg',
 }];
 

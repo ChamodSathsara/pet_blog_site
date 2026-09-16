@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { SITE_NAME, SITE_URL, DEFAULT_IMAGE, websiteJsonLd } from '@/lib/seo';
+import { Analytics } from '@/components/Analytics';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -43,6 +44,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -55,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

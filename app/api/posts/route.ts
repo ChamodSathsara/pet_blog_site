@@ -18,5 +18,5 @@ export async function GET(request: Request) {
     db.select().from(posts).where(where).orderBy(desc(posts.publishedAt)).limit(limit).offset((page - 1) * limit),
     db.select({ total: count() }).from(posts).where(where),
   ]);
-  return Response.json({ data: items, page, limit, total });
+  return Response.json({ data: items, page, limit, total }, { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300', 'X-Robots-Tag': 'noindex' } });
 }

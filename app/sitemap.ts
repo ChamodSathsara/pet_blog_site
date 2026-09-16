@@ -13,9 +13,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/disclaimer`, changeFrequency: 'yearly', priority: 0.2 },
   ];
 
-  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+  const postRoutes: MetadataRoute.Sitemap = posts.filter((post) => !post.noIndex && !post.canonicalUrl).map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: post.date,
+    lastModified: post.updatedDate || post.date,
     changeFrequency: 'monthly',
     priority: 0.8,
   }));

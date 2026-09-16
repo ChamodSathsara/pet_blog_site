@@ -8,6 +8,7 @@ import { adminUsers } from '@/lib/db/schema';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
+  trustHost: true,
   session: { strategy: 'jwt' },
   pages: { signIn: '/admin/login' },
   providers: [Credentials({
