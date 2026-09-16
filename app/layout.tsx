@@ -24,11 +24,11 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Senior Pet Health Guides`,
+    default: `${SITE_NAME} — Practical Home Maintenance Guides`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    'Veterinarian-reviewed guides on senior dog arthritis, diabetic cat diets, breed-specific health risks, and knowing when an older pet needs a vet.',
+    'Practical, expert-reviewed home maintenance guides, seasonal checklists, repair costs, and clear advice on when to DIY or hire a professional.',
   applicationName: SITE_NAME,
   openGraph: {
     siteName: SITE_NAME,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@greymuzzleguide',
+    site: '@housewisejournal',
   },
   icons: {
     icon: '/favicon.ico',

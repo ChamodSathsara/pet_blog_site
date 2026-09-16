@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
-export const SITE_NAME = 'Grey Muzzle Guide';
-export const SITE_URL = 'https://greymuzzleguide.com';
-export const DEFAULT_IMAGE = '/f6247036-a579-475d-9bef-68b7c8b1282b.jpg';
-export const TWITTER_HANDLE = '@greymuzzleguide';
+export const SITE_NAME = 'Housewise Journal';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://housewisejournal.com';
+export const DEFAULT_IMAGE = '/home-maintenance-hero.png';
+export const TWITTER_HANDLE = '@housewisejournal';
 
 interface BuildMetadataInput {
   title: string;

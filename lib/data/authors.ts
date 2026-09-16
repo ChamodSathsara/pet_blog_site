@@ -1,15 +1,12 @@
 import type { Author } from '../types/post';
 
-export const authors: Author[] = [
-{
-  id: 'dr-maya-ellison',
-  name: 'Dr. Maya Ellison',
-  credentials: 'DVM, small animal practice',
-  bio: "Maya has spent eleven years in general practice in Portland, Oregon, where roughly half her caseload is pets over the age of nine. She writes Grey Muzzle Guide's health explainers to give owners the same context she gives in the exam room — plain language, realistic options, and honest cost expectations.",
-  avatar: "/cd705750-f0c6-45f9-a495-4b5cbf9e091f.jpg"
-
+export const authors: Author[] = [{
+  id: 'daniel-brooks',
+  name: 'Daniel Brooks',
+  credentials: 'Certified home inspector & renovation editor',
+  bio: 'Daniel has inspected and repaired homes for more than fifteen years. He reviews every guide for safe sequencing, realistic costs, and the point where a homeowner should stop and call a licensed professional.',
+  avatar: '/cd705750-f0c6-45f9-a495-4b5cbf9e091f.jpg',
 }];
-
 
 export const authorsById: Record<string, Author> = authors.reduce(
   (acc, author) => ({ ...acc, [author.id]: author }),

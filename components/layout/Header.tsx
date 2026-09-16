@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, PawPrint, X } from 'lucide-react';
+import { House, Menu, X } from 'lucide-react';
 import { categories } from '@/lib/data/categories';
 import { cn } from '@/lib/utils/cn';
 
@@ -38,9 +38,9 @@ export function Header() {
       <div className="container flex h-[70px] items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sage text-primary-foreground">
-            <PawPrint className="h-5 w-5" aria-hidden="true" />
+            <House className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-serif text-[21px] font-semibold leading-none tracking-tight text-foreground">Grey Muzzle Guide</span>
+          <span className="font-serif text-[21px] font-semibold leading-none tracking-tight text-foreground">Housewise Journal</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">

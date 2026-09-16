@@ -7,7 +7,7 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata({
   title: 'Privacy Policy',
   description:
-    'How Grey Muzzle Guide collects and uses information, our use of cookies, and disclosures about third-party advertising including Google AdSense.',
+    'How Housewise Journal collects and uses information, our use of cookies, and disclosures about third-party advertising including Google AdSense.',
   path: '/privacy-policy',
 });
 
@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
       <PageHero
         eyebrow="Legal"
         title="Privacy Policy"
-        description="What we collect, why we collect it, how advertising works on this site, and how to exercise your rights."
+        description="What we collect, why we collect it, how advertising works on this site, and the choices available to you."
       />
       <div className="container py-12">
         <div className="max-w-prose">

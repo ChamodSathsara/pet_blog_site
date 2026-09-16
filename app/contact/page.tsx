@@ -5,8 +5,8 @@ import { ContactForm } from './ContactForm';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Contact Grey Muzzle Guide',
-  description: 'Send Grey Muzzle Guide a question, an article suggestion, or a correction. We reply to every message within three business days.',
+  title: 'Contact Housewise Journal',
+  description: 'Send Housewise Journal a question, article suggestion, correction, or advertising enquiry.',
   path: '/contact',
 });
 
@@ -25,9 +25,7 @@ export default function ContactPage() {
             <div className="mb-8 flex items-start gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" aria-hidden="true" />
               <p className="text-[17px] leading-relaxed text-foreground/85">
-                <strong className="font-semibold">We cannot answer medical questions about your pet.</strong> We are not able to
-                diagnose, advise on treatment, or triage symptoms by email. If something is wrong, please contact your veterinarian
-                or the nearest emergency animal hospital.
+                <strong className="font-semibold">We cannot diagnose a building problem by email.</strong> For active leaks, gas odors, electrical hazards, structural movement, or other urgent risks, stop work and contact the appropriate licensed professional or utility.
               </p>
             </div>
 
@@ -42,8 +40,8 @@ export default function ContactPage() {
                   <Mail className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   <div>
                     <p className="text-[16px] font-medium text-foreground">General</p>
-                    <a href="mailto:hello@greymuzzleguide.com" className="text-[16px] text-primary hover:underline">
-                      hello@greymuzzleguide.com
+                    <a href="mailto:hello@housewisejournal.com" className="text-[16px] text-primary hover:underline">
+                      hello@housewisejournal.com
                     </a>
                   </div>
                 </li>
@@ -51,8 +49,8 @@ export default function ContactPage() {
                   <Mail className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                   <div>
                     <p className="text-[16px] font-medium text-foreground">Corrections</p>
-                    <a href="mailto:corrections@greymuzzleguide.com" className="text-[16px] text-primary hover:underline">
-                      corrections@greymuzzleguide.com
+                    <a href="mailto:corrections@housewisejournal.com" className="text-[16px] text-primary hover:underline">
+                      corrections@housewisejournal.com
                     </a>
                   </div>
                 </li>
@@ -61,7 +59,7 @@ export default function ContactPage() {
                   <div>
                     <p className="text-[16px] font-medium text-foreground">Mailing address</p>
                     <p className="text-[16px] text-muted-foreground">
-                      Grey Muzzle Guide
+                      Housewise Journal
                       <br />
                       2140 SE Division St, Suite 4
                       <br />

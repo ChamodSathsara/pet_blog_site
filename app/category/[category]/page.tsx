@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   if (!category) {
     return buildMetadata({
       title: 'Category not found',
-      description: 'This category could not be found on Grey Muzzle Guide.',
+      description: 'This category could not be found on Housewise Journal.',
       path: `/category/${params.category}`,
       noIndex: true,
     });

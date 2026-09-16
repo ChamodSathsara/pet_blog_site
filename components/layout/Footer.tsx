@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PawPrint } from 'lucide-react';
+import { House } from 'lucide-react';
 import { categories } from '@/lib/data/categories';
 
 const siteLinks = [
@@ -10,7 +10,7 @@ const siteLinks = [
 
 const legalLinks = [
   { href: '/privacy-policy', label: 'Privacy Policy' },
-  { href: '/disclaimer', label: 'Medical Disclaimer' },
+  { href: '/disclaimer', label: 'Safety Disclaimer' },
 ];
 
 export function Footer() {
@@ -21,12 +21,12 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sage text-primary-foreground">
-                <PawPrint className="h-5 w-5" aria-hidden="true" />
+                <House className="h-5 w-5" aria-hidden="true" />
               </span>
-              <span className="font-serif text-lg font-semibold text-foreground">Grey Muzzle Guide</span>
+              <span className="font-serif text-lg font-semibold text-foreground">Housewise Journal</span>
             </div>
             <p className="mt-4 max-w-xs text-[16px] leading-relaxed text-muted-foreground">
-              Practical, veterinarian-reviewed guidance for people caring for older dogs and cats across the US and Canada.
+              Practical, expert-reviewed guidance for homeowners who want to prevent damage, plan repairs, and spend wisely.
             </p>
           </div>
 
@@ -78,19 +78,17 @@ export function Footer() {
                 </a>
               </li>
             </ul>
-            <a href="mailto:hello@greymuzzleguide.com" className="mt-5 inline-block text-[15px] text-muted-foreground hover:text-primary">
-              hello@greymuzzleguide.com
+            <a href="mailto:hello@housewisejournal.com" className="mt-5 inline-block text-[15px] text-muted-foreground hover:text-primary">
+              hello@housewisejournal.com
             </a>
           </nav>
         </div>
 
         <div className="mt-12 border-t border-border pt-6">
           <p className="text-[15px] leading-relaxed text-muted-foreground">
-            Grey Muzzle Guide publishes general educational information about pet health. It is not veterinary advice and does not
-            replace an examination by a licensed veterinarian. If your pet is unwell, contact your veterinarian or nearest emergency
-            hospital.
+            Housewise Journal publishes general educational information. Follow local codes, permit rules, and manufacturer instructions. Use licensed professionals for electrical, gas, structural, roofing, and other high-risk work.
           </p>
-          <p className="mt-4 text-[15px] text-muted-foreground">© {new Date().getFullYear()} Grey Muzzle Guide. All rights reserved.</p>
+          <p className="mt-4 text-[15px] text-muted-foreground">© {new Date().getFullYear()} Housewise Journal. All rights reserved.</p>
         </div>
       </div>
     </footer>

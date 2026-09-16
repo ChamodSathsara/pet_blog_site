@@ -46,17 +46,16 @@ export function Newsletter({ variant = 'panel', className }: NewsletterProps) {
           )}
         >
           <Mail className="h-4 w-4" aria-hidden="true" />
-          The Grey Muzzle Letter
+          The Housewise Checklist
         </div>
         <h2
           id="newsletter-heading"
           className={cn('mt-3 font-serif font-semibold leading-tight', isInline ? 'text-xl text-foreground' : 'text-3xl md:text-[38px]')}
         >
-          One careful email a month about aging pets
+          One useful home checklist each month
         </h2>
         <p className={cn('mt-3 text-[17px] leading-relaxed', isInline ? 'text-muted-foreground' : 'text-primary-foreground/85')}>
-          New guides, condition explainers, and the questions worth asking at your next senior wellness exam. No
-          affiliate spam, unsubscribe in one click.
+          Timely maintenance reminders, practical repair guides, and tools worth owning. No clutter, unsubscribe in one click.
         </p>
 
         {status === 'done' ? (

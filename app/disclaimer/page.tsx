@@ -5,16 +5,16 @@ import { disclaimer } from '@/lib/data/legal';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Medical Disclaimer',
+  title: 'Home Repair Safety Disclaimer',
   description:
-    'Grey Muzzle Guide publishes general educational information about pet health. Read our full medical disclaimer before acting on anything you find on this site.',
+    'Housewise Journal publishes general educational home maintenance information. Review our safety and liability limits before starting a repair.',
   path: '/disclaimer',
 });
 
 export default function DisclaimerPage() {
   return (
     <>
-      <PageHero eyebrow="Legal" title="Medical Disclaimer" description="Please read this before acting on anything published on this site." />
+      <PageHero eyebrow="Legal" title="Safety Disclaimer" description="Understand the limits of general home-repair guidance before starting work." />
       <div className="container py-12">
         <div className="max-w-prose">
           <Markdown source={disclaimer} />

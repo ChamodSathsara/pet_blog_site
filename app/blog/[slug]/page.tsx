@@ -65,7 +65,7 @@ export default async function PostPage({ params }: PostPageProps) {
           image: post.coverImage,
           path: `/blog/${post.slug}`,
           publishedTime: post.date,
-          authorName: author?.name ?? 'Grey Muzzle Guide',
+          authorName: author?.name ?? 'Housewise Journal',
         })}
       />
       <JsonLd
@@ -175,10 +175,9 @@ export default async function PostPage({ params }: PostPageProps) {
             <div className="mt-8 rounded-2xl border border-terracotta/30 bg-sand p-6">
               <h2 className="font-serif text-lg font-semibold text-foreground">A note on medical advice</h2>
               <p className="mt-2 text-[17px] leading-relaxed text-foreground/80">
-                This article is general education, not a diagnosis. Every pet's situation is different, and only a veterinarian who
-                has examined your animal can tell you what applies. Read our full{' '}
+                This article is general education, not an on-site inspection. Conditions, codes, and risks vary by home; use a licensed professional when work exceeds your training or equipment. Read our full{' '}
                 <Link href="/disclaimer" className="font-medium text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary">
-                  medical disclaimer
+                  safety disclaimer
                 </Link>
                 .
               </p>
