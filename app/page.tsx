@@ -17,6 +17,7 @@ import {
 import { PostCard } from "@/components/PostCard";
 import { Newsletter } from "@/components/Newsletter";
 import { AdSlot } from "@/components/AdSlot";
+import { isAdSlotConfigured } from "@/lib/adsense";
 import { formatDate, getPostReadTime } from "@/lib/utils/posts";
 import { getCategories, getHomepageFeaturedPost, getPublishedPosts } from "@/lib/db/queries";
 import { buildMetadata } from "@/lib/seo";
@@ -187,9 +188,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className="container pt-6">
+      {isAdSlotConfigured('header') && <div className="container pt-6">
         <AdSlot position="header" />
-      </div>
+      </div>}
 
       <section className="container py-16 md:py-20">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">

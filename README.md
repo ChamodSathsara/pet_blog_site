@@ -4,7 +4,7 @@ This is the Next.js (App Router) rebuild of the original Vite + React Router SPA
 
 ## Database and admin setup
 
-Create a git-ignored `.env.local` with `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `BLOB_READ_WRITE_TOKEN`. Then run:
+Create a git-ignored `.env.local` with `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `BLOB_READ_WRITE_TOKEN`. Set `NEXT_PUBLIC_ADSENSE_ENABLED=false` to render no ads or ad spacing. After AdSense approval, set it to `true` and configure `NEXT_PUBLIC_ADSENSE_CLIENT` plus the five position-specific slot variables to load responsive Google AdSense units. Then run:
 
 ```bash
 npm install

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Fraunces, Source_Sans_3 } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -7,6 +8,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { SITE_NAME, SITE_URL, DEFAULT_IMAGE, websiteJsonLd } from '@/lib/seo';
 import { Analytics } from '@/components/Analytics';
 import { getCategories } from '@/lib/db/queries';
+import { adsenseClient, adsenseScriptEnabled } from '@/lib/adsense';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -53,6 +55,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${fraunces.variable} ${sourceSans.variable}`}>
       <body className="flex min-h-screen w-full flex-col bg-background font-sans">
+        {adsenseScriptEnabled && (
+          <Script
+            id="google-adsense"
+            async
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsenseClient)}`}
+          />
+        )}
         <JsonLd data={websiteJsonLd()} />
         <Header categories={categories} />
         <main id="main-content" className="flex-1">

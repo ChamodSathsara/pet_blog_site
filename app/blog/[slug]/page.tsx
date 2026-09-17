@@ -8,6 +8,7 @@ import { TableOfContents } from '@/components/TableOfContents';
 import { AuthorBio } from '@/components/AuthorBio';
 import { ShareButtons } from '@/components/ShareButtons';
 import { AdSlot } from '@/components/AdSlot';
+import { isAdSlotConfigured } from '@/lib/adsense';
 import { PostCard } from '@/components/PostCard';
 import { Newsletter } from '@/components/Newsletter';
 import { JsonLd } from '@/components/JsonLd';
@@ -168,9 +169,9 @@ export default async function PostPage({ params }: PostPageProps) {
               <ShareButtons title={post.title} slug={post.slug} />
             </div>
 
-            <div className="mt-10">
+            {isAdSlotConfigured('below-content') && <div className="mt-10">
               <AdSlot position="below-content" />
-            </div>
+            </div>}
 
             {author && (
               <div className="mt-10">
