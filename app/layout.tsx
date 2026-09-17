@@ -8,8 +8,6 @@ import { SITE_NAME, SITE_URL, DEFAULT_IMAGE, websiteJsonLd } from '@/lib/seo';
 import { Analytics } from '@/components/Analytics';
 import { getCategories } from '@/lib/db/queries';
 
-export const dynamic = 'force-dynamic';
-
 const fraunces = Fraunces({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
