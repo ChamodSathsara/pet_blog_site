@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BookOpen, ChevronDown, House, Menu, Wrench, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Menu, Wrench, X } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { Category } from '@/lib/types/post';
 
@@ -48,9 +49,7 @@ export function Header({ categories }: { categories: Category[] }) {
 
       <div className="container flex h-[72px] items-center justify-between gap-4">
         <Link href="/" aria-label="Housewise Journal home" className="group flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#173d63] text-white shadow-sm transition-transform group-hover:-rotate-2">
-            <House className="h-5 w-5" aria-hidden="true" />
-          </span>
+          <Image src="/housewise-mark.png" alt="" width={495} height={422} priority className="h-12 w-auto shrink-0 transition-transform group-hover:-rotate-2" />
           <span className="min-w-0">
             <span className="block truncate font-serif text-[20px] font-semibold leading-none tracking-tight text-[#172033] sm:text-[22px]">Housewise Journal</span>
             <span className="mt-1 hidden text-[11px] font-semibold uppercase tracking-[.13em] text-slate-500 sm:block">Maintain smarter</span>

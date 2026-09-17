@@ -106,7 +106,7 @@ export function articleJsonLd({
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.ico` },
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/housewise-logo.png` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}${path}` },
   };

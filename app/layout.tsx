@@ -45,7 +45,8 @@ export const metadata: Metadata = {
     site: '@housewisejournal',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/housewise-icon.png',
+    apple: '/housewise-icon.png',
   },
   verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
 };

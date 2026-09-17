@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -20,7 +21,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return <div onClickCapture={detectNavigation} className="min-h-screen bg-secondary/20 lg:grid lg:grid-cols-[240px_1fr]">
     {navigating && <div role="status" aria-live="polite" className="fixed inset-x-0 top-0 z-[100] flex h-1 items-center bg-primary/20"><span className="h-full w-full animate-pulse bg-primary" /><span className="sr-only">Loading admin page</span></div>}
     <aside className="border-b border-border bg-card p-5 lg:min-h-screen lg:border-b-0 lg:border-r">
-      <Link href="/admin" className="font-serif text-xl font-semibold text-primary">Housewise Admin</Link>
+      <Link href="/admin" className="flex items-center gap-2.5 font-serif text-xl font-semibold text-primary"><Image src="/housewise-mark.png" alt="" width={495} height={422} className="h-9 w-auto" />Housewise Admin</Link>
       <nav className="mt-6 flex flex-wrap gap-2 lg:flex-col">
         {['Dashboard','Posts','Categories','Messages','Subscribers'].map((name) => <Link key={name} href={name === 'Dashboard' ? '/admin' : `/admin/${name.toLowerCase()}`} className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-secondary">{name}</Link>)}
         <Button variant="ghost" className="justify-start" disabled={navigating} onClick={async () => { setNavigating(true); await signOut({ callbackUrl: '/admin/login' }); }}>

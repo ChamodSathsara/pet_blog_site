@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { House } from "lucide-react";
+import Image from "next/image";
 import type { Category } from "@/lib/types/post";
 
 const siteLinks = [
@@ -19,14 +19,9 @@ export function Footer({ categories }: { categories: Category[] }) {
       <div className="container py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sage text-primary-foreground">
-                <House className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="font-serif text-lg font-semibold text-foreground">
-                Housewise Journal
-              </span>
-            </div>
+            <Link href="/" aria-label="Housewise Journal home" className="inline-block rounded-lg focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/40">
+              <Image src="/housewise-logo.png" alt="HouseWise Journal — Practical Advice for a Smarter Home" width={1039} height={787} className="h-auto w-[220px]" />
+            </Link>
             <p className="mt-4 max-w-xs text-[16px] leading-relaxed text-muted-foreground">
               Practical, expert-reviewed guidance for homeowners who want to
               prevent damage, plan repairs, and spend wisely.
