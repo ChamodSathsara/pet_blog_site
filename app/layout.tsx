@@ -6,6 +6,9 @@ import { Footer } from '@/components/layout/Footer';
 import { JsonLd } from '@/components/JsonLd';
 import { SITE_NAME, SITE_URL, DEFAULT_IMAGE, websiteJsonLd } from '@/lib/seo';
 import { Analytics } from '@/components/Analytics';
+import { getCategories } from '@/lib/db/queries';
+
+export const dynamic = 'force-dynamic';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -47,16 +50,17 @@ export const metadata: Metadata = {
   verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const categories = await getCategories();
   return (
     <html lang="en" className={`${fraunces.variable} ${sourceSans.variable}`}>
       <body className="flex min-h-screen w-full flex-col bg-background font-sans">
         <JsonLd data={websiteJsonLd()} />
-        <Header />
+        <Header categories={categories} />
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
+        <Footer categories={categories} />
         <Analytics />
       </body>
     </html>

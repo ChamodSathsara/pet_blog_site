@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BookOpen, ChevronDown, House, Menu, Wrench, X } from 'lucide-react';
-import { categories } from '@/lib/data/categories';
 import { cn } from '@/lib/utils/cn';
+import type { Category } from '@/lib/types/post';
 
 const primaryNav = [
   { href: '/', label: 'Home' },
@@ -18,7 +18,7 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Header() {
+export function Header({ categories }: { categories: Category[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [topicsOpen, setTopicsOpen] = useState(false);
   const pathname = usePathname();

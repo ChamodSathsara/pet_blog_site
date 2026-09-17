@@ -15,10 +15,6 @@ interface CategoryPageProps {
 
 export const revalidate = 60;
 
-export async function generateStaticParams() {
-  return (await getCategories()).map((category) => ({ category: category.slug }));
-}
-
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const category = await getCategoryBySlug(params.category);
   if (!category) {

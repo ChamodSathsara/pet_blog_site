@@ -12,7 +12,7 @@ import { PostCard } from '@/components/PostCard';
 import { Newsletter } from '@/components/Newsletter';
 import { JsonLd } from '@/components/JsonLd';
 import { formatDate, getPostReadTime } from '@/lib/utils/posts';
-import { getPublishedPost, getPublishedPosts, getRelatedPublishedPosts } from '@/lib/db/queries';
+import { getPublishedPost, getRelatedPublishedPosts } from '@/lib/db/queries';
 import { articleJsonLd, breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 
 interface PostPageProps {
@@ -20,10 +20,6 @@ interface PostPageProps {
 }
 
 export const revalidate = 60;
-
-export async function generateStaticParams() {
-  return (await getPublishedPosts()).map((post) => ({ slug: post.slug }));
-}
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const result = await getPublishedPost(params.slug);

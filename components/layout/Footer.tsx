@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { House } from 'lucide-react';
-import { categories } from '@/lib/data/categories';
+import type { Category } from '@/lib/types/post';
 
 const siteLinks = [
   { href: '/blog', label: 'All Articles' },
@@ -13,7 +13,7 @@ const legalLinks = [
   { href: '/disclaimer', label: 'Safety Disclaimer' },
 ];
 
-export function Footer() {
+export function Footer({ categories }: { categories: Category[] }) {
   return (
     <footer className="mt-20 border-t border-border bg-secondary/60">
       <div className="container py-14">
