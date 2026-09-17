@@ -4,6 +4,7 @@ export const SITE_NAME = 'Housewise Journal';
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://housewisejournal.com';
 export const DEFAULT_IMAGE = '/home-maintenance-hero.png';
 export const TWITTER_HANDLE = '@housewisejournal';
+// update test
 
 interface BuildMetadataInput {
   title: string;
