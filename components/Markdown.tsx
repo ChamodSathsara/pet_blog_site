@@ -108,6 +108,13 @@ function Block({ block }: { block: MarkdownBlock }) {
       );
 
     case 'image':
+      if (!block.src.startsWith('/') && !/^https?:\/\//i.test(block.src)) {
+        return (
+          <div className="mt-8 rounded-2xl border border-dashed border-border bg-muted p-6 text-center text-[15px] text-muted-foreground">
+            This image needs a valid uploaded image URL.
+          </div>
+        );
+      }
       return (
         <figure className="mt-8">
           <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-border bg-muted">
