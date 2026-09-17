@@ -17,6 +17,21 @@ export function PostEditor({ initial, categories, authors }: { initial: Initial;
   const editorRef = useRef<HTMLDivElement>(null);
   const inlineFileRef = useRef<HTMLInputElement>(null);
   const set = (key: keyof Initial, value: unknown) => setForm((current) => ({ ...current, [key]: value }));
+  const insertBlock = (snippet: string) => {
+    const textarea = editorRef.current?.querySelector('textarea');
+    const start = textarea?.selectionStart ?? form.content.length;
+    const end = textarea?.selectionEnd ?? start;
+    const before = form.content.slice(0, start);
+    const after = form.content.slice(end);
+    const prefix = before && !before.endsWith('\n\n') ? (before.endsWith('\n') ? '\n' : '\n\n') : '';
+    const suffix = after && !after.startsWith('\n\n') ? (after.startsWith('\n') ? '\n' : '\n\n') : '';
+    set('content', `${before}${prefix}${snippet}${suffix}${after}`);
+    requestAnimationFrame(() => {
+      const nextTextarea = editorRef.current?.querySelector('textarea');
+      const cursor = before.length + prefix.length + snippet.length;
+      nextTextarea?.focus(); nextTextarea?.setSelectionRange(cursor, cursor);
+    });
+  };
   const submit = async (event: React.FormEvent) => { event.preventDefault(); if (form.coverImageUrl && !form.coverAlt.trim()) { setError('Add descriptive alt text for the cover image before saving.'); return; } setSaving(true); setError(''); const response = await fetch(initial.id ? `/api/admin/posts/${initial.id}` : '/api/admin/posts', { method: initial.id ? 'PUT' : 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) }); setSaving(false); if (!response.ok) { const body = await response.json().catch(() => ({})); setError(body.error || 'Could not save post'); return; } router.push('/admin/posts'); router.refresh(); };
   const uploadInlineImage = async () => {
     const alt = inlineAlt.trim();
@@ -67,7 +82,7 @@ export function PostEditor({ initial, categories, authors }: { initial: Initial;
       {inlineError && <p role="alert" className="mt-3 text-sm text-destructive">{inlineError}</p>}
       {inlineNotice && <p role="status" className="mt-3 text-sm font-medium text-primary">{inlineNotice}</p>}
     </section>
-    <div><p className="mb-2 text-sm text-muted-foreground"><strong className="text-foreground">Heading guide:</strong> the article title is already H1. Use H2 for main topics, H3 for subtopics, then H4–H6 only when deeper sections are needed.</p><Field label="Content (Markdown)"><div ref={editorRef} data-color-mode="light"><MDEditor value={form.content} onChange={(value) => set('content', value || '')} height={520} commandsFilter={(command) => command.name === 'image' ? { ...command, execute: () => { document.getElementById('inline-image-upload')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); window.setTimeout(() => inlineFileRef.current?.focus(), 350); } } : command} components={{ preview: (source: string) => <div className="px-5 pb-8"><Markdown source={source} /></div> }} /></div></Field></div>
+    <section className="rounded-2xl border bg-card p-5"><h2 className="font-serif text-xl font-semibold">Article body</h2><p className="mt-1 text-sm text-muted-foreground">Place the cursor where you want a section, then choose a block. Replace the example text and check the live preview.</p><div className="mt-4 flex flex-wrap gap-2"><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('## Main topic')}>Main topic (H2)</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('### Subtopic')}>Subtopic (H3)</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('#### Smaller section')}>Smaller section</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('- First point\n- Second point\n- Third point')}>Bullet list</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('1. First step\n2. Second step\n3. Third step')}>Numbered steps</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('::: Good to know\nAdd the useful tip here.')}>Tip box</Button><Button type="button" size="sm" variant="outline" onClick={() => insertBlock('| Option | Best for | Cost |\n| --- | --- | --- |\n| Option A | Example use | $$ |\n| Option B | Example use | $$$ |')}>Comparison table</Button></div><p className="mt-3 text-xs text-muted-foreground"><strong className="text-foreground">SEO heading guide:</strong> the article title is already H1. Use H2 for main topics, H3 for subtopics, and H4–H6 only for deeper sections.</p><div className="mt-4"><Field label="Write and preview"><div ref={editorRef} data-color-mode="light"><MDEditor value={form.content} onChange={(value) => set('content', value || '')} height={620} commandsFilter={(command) => command.name === 'image' ? { ...command, execute: () => { document.getElementById('inline-image-upload')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); window.setTimeout(() => inlineFileRef.current?.focus(), 350); } } : command} components={{ preview: (source: string) => <div className="px-5 pb-8"><Markdown source={source} /></div> }} /></div></Field></div></section>
     {error && <p role="alert" className="text-destructive">{error}</p>}<div className="flex gap-3"><Button size="lg" disabled={saving}>{saving ? 'Saving…' : 'Save post'}</Button><Button type="button" size="lg" variant="outline" onClick={() => router.push('/admin/posts')}>Cancel</Button></div>
   </form>;
 }

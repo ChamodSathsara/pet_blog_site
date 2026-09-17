@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { categories, posts } from '@/lib/db/schema';
 import { apiError, jsonBody } from '@/lib/api';
-import { postSchema } from '@/lib/validation';
+import { postSchema, postStatusUpdateSchema } from '@/lib/validation';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
@@ -27,6 +27,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const [post] = await db.update(posts).set({ ...data, publishedAt, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
     revalidatePost([existing.slug, data.slug], [await categorySlug(existing.categoryId), await categorySlug(data.categoryId)]);
     return post ? Response.json(post) : Response.json({ error: 'Post not found' }, { status: 404 });
+  } catch (error) { return apiError(error); }
+}
+export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+  try {
+    const { status } = postStatusUpdateSchema.parse(await jsonBody(request));
+    const [existing] = await db.select({ publishedAt: posts.publishedAt, slug: posts.slug, categoryId: posts.categoryId }).from(posts).where(eq(posts.id, params.id)).limit(1);
+    if (!existing) return Response.json({ error: 'Post not found' }, { status: 404 });
+    const [post] = await db.update(posts).set({ status, publishedAt: status === 'published' ? existing.publishedAt ?? new Date() : null, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
+    revalidatePost([existing.slug], [await categorySlug(existing.categoryId)]);
+    return Response.json(post);
   } catch (error) { return apiError(error); }
 }
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {

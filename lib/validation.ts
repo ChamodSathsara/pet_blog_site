@@ -16,6 +16,7 @@ export const postSchema = z.object({
   tags: z.array(z.string().trim().min(1).max(80)).max(30).default([]), status: z.enum(['draft', 'published']),
   publishedAt: z.string().datetime().nullable().optional(),
 });
+export const postStatusUpdateSchema = z.object({ status: z.enum(['draft', 'published']) });
 export const messageStatusSchema = z.object({ status: z.enum(['unread', 'read', 'replied']) });
 
 export function validationError(error: z.ZodError) {
