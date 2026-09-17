@@ -46,18 +46,16 @@ function Inline({ text }: { text: string }) {
 function Block({ block }: { block: MarkdownBlock }) {
   switch (block.type) {
     case 'heading':
-      return block.level === 2 ? (
-        <h2
-          id={block.id}
-          className="mt-12 scroll-mt-28 text-[26px] font-semibold leading-tight text-foreground md:text-[32px]"
-        >
-          {block.text}
-        </h2>
-      ) : (
-        <h3 id={block.id} className="mt-9 scroll-mt-28 text-xl font-semibold leading-snug text-foreground md:text-2xl">
-          {block.text}
-        </h3>
-      );
+      const HeadingTag = `h${block.level}` as keyof React.JSX.IntrinsicElements;
+      const headingClasses = {
+        1: 'mt-12 text-[30px] md:text-[38px]',
+        2: 'mt-12 text-[26px] md:text-[32px]',
+        3: 'mt-9 text-xl md:text-2xl',
+        4: 'mt-8 text-lg md:text-xl',
+        5: 'mt-7 text-[17px] md:text-lg',
+        6: 'mt-6 text-base',
+      }[block.level];
+      return <HeadingTag id={block.id} className={`${headingClasses} scroll-mt-28 font-semibold leading-tight text-foreground`}>{block.text}</HeadingTag>;
 
     case 'paragraph':
       return (

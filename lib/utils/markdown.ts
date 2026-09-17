@@ -5,7 +5,7 @@ export type InlineToken =
 {type: 'link';value: string;href: string;};
 
 export type MarkdownBlock =
-{type: 'heading';level: 2 | 3;text: string;id: string;} |
+{type: 'heading';level: 1 | 2 | 3 | 4 | 5 | 6;text: string;id: string;} |
 {type: 'paragraph';text: string;} |
 {type: 'list';ordered: boolean;items: string[];} |
 {type: 'quote';text: string;} |
@@ -79,14 +79,10 @@ export function parseMarkdown(source: string): MarkdownBlock[] {
       continue;
     }
 
-    if (chunk.startsWith('### ')) {
-      const text = chunk.slice(4).trim();
-      blocks.push({ type: 'heading', level: 3, text, id: slugify(text) });
-      continue;
-    }
-    if (chunk.startsWith('## ')) {
-      const text = chunk.slice(3).trim();
-      blocks.push({ type: 'heading', level: 2, text, id: slugify(text) });
+    const heading = /^(#{1,6})\s+([\s\S]+)$/.exec(chunk);
+    if (heading) {
+      const text = heading[2].trim();
+      blocks.push({ type: 'heading', level: heading[1].length as 1 | 2 | 3 | 4 | 5 | 6, text, id: slugify(text) });
       continue;
     }
     if (chunk.startsWith(':::')) {

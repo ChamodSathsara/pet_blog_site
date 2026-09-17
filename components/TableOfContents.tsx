@@ -49,7 +49,7 @@ export function TableOfContents({ source, className }: TableOfContentsProps) {
               href={`#${heading.id}`}
               className={cn(
                 '-ml-px block border-l-2 py-1 text-[15px] leading-snug transition-colors',
-                heading.level === 3 ? 'pl-6' : 'pl-4',
+                heading.level <= 2 ? 'pl-4' : heading.level === 3 ? 'pl-6' : 'pl-8',
                 activeId === heading.id ? 'border-primary font-medium text-primary' : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
               )}
             >
