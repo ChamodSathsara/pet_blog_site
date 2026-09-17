@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Info } from 'lucide-react';
 import { AdSlot } from '@/components/AdSlot';
 import { parseInline, parseMarkdown } from '@/lib/utils/markdown';
@@ -103,6 +104,40 @@ function Block({ block }: { block: MarkdownBlock }) {
               </p>
             </div>
           </div>
+        </div>
+      );
+
+    case 'image':
+      return (
+        <figure className="mt-8">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-border bg-muted">
+            <Image src={block.src} alt={block.alt} fill sizes="(max-width: 768px) 100vw, 760px" className="object-contain" />
+          </div>
+          {block.caption && <figcaption className="mt-2 text-center text-[15px] leading-relaxed text-muted-foreground"><Inline text={block.caption} /></figcaption>}
+        </figure>
+      );
+
+    case 'code':
+      return (
+        <div className="mt-7 overflow-hidden rounded-2xl border border-border bg-foreground text-background">
+          {block.language && <div className="border-b border-background/15 px-5 py-2 font-mono text-xs uppercase tracking-wide text-background/70">{block.language}</div>}
+          <pre className="overflow-x-auto p-5 text-[15px] leading-relaxed"><code className="font-mono" data-language={block.language}>{block.code}</code></pre>
+        </div>
+      );
+
+    case 'table':
+      return (
+        <div className="mt-7 overflow-x-auto rounded-2xl border border-border">
+          <table className="w-full min-w-[560px] border-collapse text-left text-[17px] text-foreground/85">
+            <thead className="bg-secondary/70 text-foreground">
+              <tr>{block.headers.map((header, index) => <th key={index} scope="col" className="border-b border-border px-4 py-3 font-semibold"><Inline text={header} /></th>)}</tr>
+            </thead>
+            <tbody>{block.rows.map((row, rowIndex) => (
+              <tr key={rowIndex} className="border-b border-border last:border-b-0">
+                {row.map((cell, cellIndex) => <td key={cellIndex} className="px-4 py-3 align-top leading-relaxed"><Inline text={cell} /></td>)}
+              </tr>
+            ))}</tbody>
+          </table>
         </div>
       );
 

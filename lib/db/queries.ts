@@ -44,7 +44,19 @@ export const getPublishedPostsByCategory = cache(async (slug: string) => unstabl
 )());
 
 export const getRelatedPublishedPosts = cache(async (slug: string, categoryId: string, tags: string[], limit = 2) => unstable_cache(async () => {
-  const rows = await joined().where(and(eq(posts.status, 'published'), ne(posts.slug, slug)));
+  const candidateLimit = Math.max(20, Math.min(30, limit * 5));
+  const sameCategoryRows = await joined()
+    .where(and(eq(posts.status, 'published'), ne(posts.slug, slug), eq(posts.categoryId, categoryId)))
+    .orderBy(desc(posts.publishedAt))
+    .limit(candidateLimit);
+  const remaining = candidateLimit - sameCategoryRows.length;
+  const fallbackRows = remaining > 0
+    ? await joined()
+      .where(and(eq(posts.status, 'published'), ne(posts.slug, slug), ne(posts.categoryId, categoryId)))
+      .orderBy(desc(posts.publishedAt))
+      .limit(remaining)
+    : [];
+  const rows = [...sameCategoryRows, ...fallbackRows];
   return rows.map((row) => ({ post: toPost(row), score: (row.post.categoryId === categoryId ? 2 : 0) + row.post.tags.filter((tag) => tags.includes(tag)).length }))
     .sort((a, b) => b.score - a.score).slice(0, limit).map(({ post }) => post);
 }, ['related-published-posts', slug, categoryId, tags.join('|'), String(limit)], {

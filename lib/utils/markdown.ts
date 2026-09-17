@@ -9,7 +9,10 @@ export type MarkdownBlock =
 {type: 'paragraph';text: string;} |
 {type: 'list';ordered: boolean;items: string[];} |
 {type: 'quote';text: string;} |
-{type: 'callout';title: string;text: string;};
+{type: 'callout';title: string;text: string;} |
+{type: 'image';src: string;alt: string;caption?: string;} |
+{type: 'code';language?: string;code: string;} |
+{type: 'table';headers: string[];rows: string[][];};
 
 export function slugify(value: string): string {
   return value.
@@ -20,12 +23,61 @@ export function slugify(value: string): string {
 }
 
 export function parseMarkdown(source: string): MarkdownBlock[] {
-  const chunks = source.trim().split(/\n{2,}/);
   const blocks: MarkdownBlock[] = [];
+  const lines = source.trim().replace(/\r\n?/g, '\n').split('\n');
 
-  for (const raw of chunks) {
-    const chunk = raw.trim();
+  const tableCells = (line: string) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
+  const isTableDivider = (line: string) => {
+    const cells = tableCells(line);
+    return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+  };
+
+  let index = 0;
+  while (index < lines.length) {
+    if (!lines[index].trim()) {
+      index += 1;
+      continue;
+    }
+
+    const fence = /^```\s*([^\s`]*)\s*$/.exec(lines[index].trim());
+    if (fence) {
+      const codeLines: string[] = [];
+      index += 1;
+      while (index < lines.length && !/^```\s*$/.test(lines[index].trim())) {
+        codeLines.push(lines[index]);
+        index += 1;
+      }
+      if (index < lines.length) index += 1;
+      blocks.push({ type: 'code', language: fence[1] || undefined, code: codeLines.join('\n') });
+      continue;
+    }
+
+    if (index + 1 < lines.length && lines[index].includes('|') && isTableDivider(lines[index + 1])) {
+      const headers = tableCells(lines[index]);
+      const rows: string[][] = [];
+      index += 2;
+      while (index < lines.length && lines[index].trim() && lines[index].includes('|')) {
+        const cells = tableCells(lines[index]);
+        rows.push(headers.map((_, cellIndex) => cells[cellIndex] || ''));
+        index += 1;
+      }
+      blocks.push({ type: 'table', headers, rows });
+      continue;
+    }
+
+    const chunkLines: string[] = [];
+    while (index < lines.length && lines[index].trim()) {
+      chunkLines.push(lines[index]);
+      index += 1;
+    }
+    const chunk = chunkLines.join('\n').trim();
     if (!chunk) continue;
+
+    const image = /^!\[([^\]]+)\]\((\S+?)(?:\s+["']([^"']*)["'])?\)$/.exec(chunk);
+    if (image) {
+      blocks.push({ type: 'image', src: image[2], alt: image[1].trim(), caption: image[3]?.trim() || undefined });
+      continue;
+    }
 
     if (chunk.startsWith('### ')) {
       const text = chunk.slice(4).trim();
