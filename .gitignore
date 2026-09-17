@@ -27,3 +27,6 @@ next-env.d.ts
 
 # Local development uploads (production images use Vercel Blob)
 /public/uploads/*
+
+.vercel
+.env*
