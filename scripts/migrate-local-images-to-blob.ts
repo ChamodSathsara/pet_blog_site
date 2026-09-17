@@ -30,7 +30,7 @@ async function uploadLocalImage(localUrl: string, token?: string) {
 }
 
 async function main() {
-  const token = process.env.BLOB_READ_WRITE_TOKEN || undefined;
+  const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKENS_READ_WRITE_TOKEN || undefined;
 
   const rows = await db.select({ id: posts.id, slug: posts.slug, coverImageUrl: posts.coverImageUrl, content: posts.content }).from(posts);
   const uploaded = new Map<string, string>();

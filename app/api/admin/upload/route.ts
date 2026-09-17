@@ -10,9 +10,9 @@ export async function POST(request: Request) {
   const extension = ({ 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp', 'image/gif': '.gif' } as const)[file.type];
   const baseName = path.basename(file.name, path.extname(file.name)).replace(/[^a-zA-Z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'image';
   const safeName = `${crypto.randomUUID()}-${baseName}${extension}`;
-  if (process.env.NODE_ENV === 'production' || process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.NODE_ENV === 'production' || process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKENS_READ_WRITE_TOKEN) {
     try {
-      const token = process.env.BLOB_READ_WRITE_TOKEN || undefined;
+      const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKENS_READ_WRITE_TOKEN || undefined;
       const oidcToken = process.env.VERCEL_OIDC_TOKEN || undefined;
       const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || process.env.BLOB_READ_WRITE_TOKENS_STORE_ID || undefined;
       const blob = await put(`post-covers/${safeName}`, file, {
