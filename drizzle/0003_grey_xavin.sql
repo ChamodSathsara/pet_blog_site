@@ -1,0 +1,2 @@
+ALTER TABLE "posts" ADD COLUMN "homepage_featured" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "posts_homepage_featured_idx" ON "posts" USING btree ("homepage_featured") WHERE "posts"."homepage_featured" = true;

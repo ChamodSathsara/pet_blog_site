@@ -1,4 +1,5 @@
 import { boolean, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const postStatus = pgEnum('post_status', ['draft', 'published']);
 export const messageStatus = pgEnum('message_status', ['unread', 'read', 'replied']);
@@ -41,9 +42,13 @@ export const posts = pgTable('posts', {
   authorId: uuid('author_id').references(() => authors.id, { onDelete: 'restrict' }),
   tags: text('tags').array().default([]).notNull(),
   status: postStatus('status').default('draft').notNull(),
+  homepageFeatured: boolean('homepage_featured').default(false).notNull(),
   publishedAt: timestamp('published_at', { withTimezone: true }),
   ...timestamps,
-}, (table) => ({ slugIdx: uniqueIndex('posts_slug_idx').on(table.slug) }));
+}, (table) => ({
+  slugIdx: uniqueIndex('posts_slug_idx').on(table.slug),
+  homepageFeaturedIdx: uniqueIndex('posts_homepage_featured_idx').on(table.homepageFeatured).where(sql`${table.homepageFeatured} = true`),
+}));
 
 export const messages = pgTable('messages', {
   id: uuid('id').defaultRandom().primaryKey(),

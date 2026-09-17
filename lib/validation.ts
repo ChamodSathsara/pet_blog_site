@@ -14,6 +14,7 @@ export const postSchema = z.object({
   content: z.string().trim().min(1), coverImageUrl: z.string().trim().max(2000).optional().default(''),
   coverAlt: z.string().trim().max(500).optional().default(''), categoryId: z.string().uuid(), authorId: z.string().uuid().nullable(),
   tags: z.array(z.string().trim().min(1).max(80)).max(30).default([]), status: z.enum(['draft', 'published']),
+  homepageFeatured: z.boolean().optional().default(false),
   publishedAt: z.string().datetime().nullable().optional(),
 });
 export const postStatusUpdateSchema = z.object({ status: z.enum(['draft', 'published']) });

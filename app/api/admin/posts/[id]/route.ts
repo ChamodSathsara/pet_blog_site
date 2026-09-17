@@ -13,7 +13,7 @@ async function categorySlug(id: string) {
 }
 
 function revalidatePost(slugs: string[], categorySlugs: (string | undefined)[]) {
-  revalidateTag('posts'); revalidatePath('/'); revalidatePath('/blog'); revalidatePath('/sitemap.xml');
+  revalidateTag('posts'); revalidateTag('homepage-featured'); revalidatePath('/'); revalidatePath('/blog'); revalidatePath('/sitemap.xml');
   for (const slug of new Set(slugs)) { revalidateTag(`post-${slug}`); revalidatePath(`/blog/${slug}`); }
   for (const slug of new Set(categorySlugs.filter((item): item is string => Boolean(item)))) { revalidateTag(`category-${slug}`); revalidatePath(`/category/${slug}`); }
 }
@@ -24,7 +24,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const [existing] = await db.select({ publishedAt: posts.publishedAt, slug: posts.slug, categoryId: posts.categoryId }).from(posts).where(eq(posts.id, params.id)).limit(1);
     if (!existing) return Response.json({ error: 'Post not found' }, { status: 404 });
     const publishedAt = data.status === 'published' ? (data.publishedAt ? new Date(data.publishedAt) : existing.publishedAt ?? new Date()) : null;
-    const [post] = await db.update(posts).set({ ...data, publishedAt, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
+    const homepageFeatured = data.status === 'published' && data.homepageFeatured;
+    if (homepageFeatured) await db.update(posts).set({ homepageFeatured: false }).where(eq(posts.homepageFeatured, true));
+    const [post] = await db.update(posts).set({ ...data, homepageFeatured, publishedAt, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
     revalidatePost([existing.slug, data.slug], [await categorySlug(existing.categoryId), await categorySlug(data.categoryId)]);
     return post ? Response.json(post) : Response.json({ error: 'Post not found' }, { status: 404 });
   } catch (error) { return apiError(error); }
@@ -34,7 +36,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     const { status } = postStatusUpdateSchema.parse(await jsonBody(request));
     const [existing] = await db.select({ publishedAt: posts.publishedAt, slug: posts.slug, categoryId: posts.categoryId }).from(posts).where(eq(posts.id, params.id)).limit(1);
     if (!existing) return Response.json({ error: 'Post not found' }, { status: 404 });
-    const [post] = await db.update(posts).set({ status, publishedAt: status === 'published' ? existing.publishedAt ?? new Date() : null, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
+    const [post] = await db.update(posts).set({ status, ...(status === 'draft' ? { homepageFeatured: false } : {}), publishedAt: status === 'published' ? existing.publishedAt ?? new Date() : null, updatedAt: new Date() }).where(eq(posts.id, params.id)).returning();
     revalidatePost([existing.slug], [await categorySlug(existing.categoryId)]);
     return Response.json(post);
   } catch (error) { return apiError(error); }

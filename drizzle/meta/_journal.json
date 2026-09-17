@@ -22,6 +22,13 @@
       "when": 1789625623223,
       "tag": "0002_bent_diamondback",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789638696537,
+      "tag": "0003_grey_xavin",
+      "breakpoints": true
     }
   ]
 }

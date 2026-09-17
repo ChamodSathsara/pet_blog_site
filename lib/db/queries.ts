@@ -17,7 +17,7 @@ const toPost = ({ post, category }: JoinedPost): Post => ({
   seoTitle: post.seoTitle || undefined, metaDescription: post.metaDescription || undefined,
   canonicalUrl: post.canonicalUrl || undefined, noIndex: post.noIndex,
   coverImage: post.coverImageUrl || '/home-maintenance-hero.png', coverAlt: post.coverAlt || post.title,
-  category: category.slug, categoryName: category.name, tags: post.tags, author: post.authorId || undefined, content: post.content,
+  category: category.slug, categoryName: category.name, tags: post.tags, author: post.authorId || undefined, featured: post.homepageFeatured, content: post.content,
 });
 const toAuthor = (author: typeof authors.$inferSelect): Author => ({
   id: author.id, name: author.name, credentials: author.credentials || '', bio: author.bio || '', avatar: author.avatarUrl || '',
@@ -30,6 +30,15 @@ const publishedPostsCached = unstable_cache(
   ['published-posts'], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['posts'] },
 );
 export const getPublishedPosts = cache(publishedPostsCached);
+
+const homepageFeaturedPostCached = unstable_cache(
+  async () => {
+    const [row] = await joined().where(and(eq(posts.status, 'published'), eq(posts.homepageFeatured, true))).limit(1);
+    return row ? toPost(row) : null;
+  },
+  ['homepage-featured-post'], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['posts', 'homepage-featured'] },
+);
+export const getHomepageFeaturedPost = cache(homepageFeaturedPostCached);
 
 const publishedPostSlugsCached = unstable_cache(
   async () => db.select({ slug: posts.slug }).from(posts).where(eq(posts.status, 'published')).orderBy(asc(posts.slug)),

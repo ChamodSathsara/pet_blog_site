@@ -18,7 +18,7 @@ import { PostCard } from "@/components/PostCard";
 import { Newsletter } from "@/components/Newsletter";
 import { AdSlot } from "@/components/AdSlot";
 import { formatDate, getPostReadTime } from "@/lib/utils/posts";
-import { getCategories, getPublishedPosts } from "@/lib/db/queries";
+import { getCategories, getHomepageFeaturedPost, getPublishedPosts } from "@/lib/db/queries";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -64,11 +64,13 @@ const trustPoints = [
 ];
 
 export default async function Home() {
-  const [allPosts, categories] = await Promise.all([
+  const [allPosts, categories, selectedMainArticle] = await Promise.all([
     getPublishedPosts(),
     getCategories(),
+    getHomepageFeaturedPost(),
   ]);
-  const featured = allPosts[0];
+  const featured = selectedMainArticle ?? allPosts[0];
+  const mainArticleHref = featured ? `/blog/${featured.slug}` : "/blog";
   const latest = featured
     ? allPosts.filter((post) => post.slug !== featured.slug)
     : allPosts;
@@ -102,7 +104,7 @@ export default async function Home() {
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                href="/category/seasonal-maintenance"
+                href={mainArticleHref}
                 className="inline-flex h-13 items-center rounded-xl bg-[#f97316] px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-[#ff8430]"
               >
                 Open the fall checklist <ArrowRight className="ml-2 h-4 w-4" />
@@ -145,7 +147,7 @@ export default async function Home() {
                 </h2>
               </div>
               <Link
-                href="/blog/fall-home-maintenance-checklist"
+                href={mainArticleHref}
                 className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-white/80 hover:text-white"
               >
                 Full checklist <ArrowRight className="h-4 w-4" />
