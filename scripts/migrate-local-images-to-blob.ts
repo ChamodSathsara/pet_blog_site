@@ -7,7 +7,7 @@ import { posts } from '../lib/db/schema';
 
 const markdownImage = /!\[[^\]]*\]\((\/uploads\/[^\s)]+)(?:\s+["'][^"']*["'])?\)/g;
 
-async function uploadLocalImage(localUrl: string, token: string) {
+async function uploadLocalImage(localUrl: string, token?: string) {
   const relativePath = decodeURIComponent(localUrl).replace(/^\/+/, '');
   const absolutePath = path.resolve(process.cwd(), 'public', relativePath.replace(/^uploads[\\/]/, 'uploads/'));
   const uploadsRoot = path.resolve(process.cwd(), 'public', 'uploads');
@@ -19,15 +19,14 @@ async function uploadLocalImage(localUrl: string, token: string) {
   const contentType = extension === '.png' ? 'image/png' : extension === '.webp' ? 'image/webp' : extension === '.gif' ? 'image/gif' : 'image/jpeg';
   const blob = await put(`post-images/migrated-${crypto.randomUUID()}${extension}`, file, {
     access: 'public',
-    token,
+    ...(token ? { token } : {}),
     contentType,
   });
   return blob.url;
 }
 
 async function main() {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) throw new Error('BLOB_READ_WRITE_TOKEN is required');
+  const token = process.env.BLOB_READ_WRITE_TOKEN || undefined;
 
   const rows = await db.select({ id: posts.id, slug: posts.slug, coverImageUrl: posts.coverImageUrl, content: posts.content }).from(posts);
   const uploaded = new Map<string, string>();
