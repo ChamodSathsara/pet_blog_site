@@ -63,11 +63,11 @@ app/                     # routes (App Router)
   about/ contact/ privacy-policy/ disclaimer/
 components/              # shared UI (Header, Footer, PostCard, Markdown, etc.)
 lib/
-  data/                  # posts, authors, categories, legal copy (unchanged content)
+  data/                  # authors, categories, legal copy (unchanged content) — posts now live in the database, managed via /admin
   utils/                 # posts.ts, markdown.ts, cn.ts (unchanged logic)
   seo.ts                 # Metadata + JSON-LD builders (replaces the old useSeo hook)
 ```
 
 ## Adding a new post
 
-Add a new file to `lib/data/posts/` following the existing shape, export it, and add it to the array in `lib/data/posts/index.ts`. It will automatically appear in the blog index, its category page, the sitemap, and get its own statically generated page — no route wiring needed.
+After logging in, open `/admin` and create or publish the post with the Post Editor. Posts are written directly to the database; there is no file-based post workflow.

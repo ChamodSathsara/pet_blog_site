@@ -5,7 +5,7 @@ import { PageHero } from '@/components/PageHero';
 import { PostCard } from '@/components/PostCard';
 import { AdSlot } from '@/components/AdSlot';
 import { Newsletter } from '@/components/Newsletter';
-import { getCategories, getCategoryBySlug, getPublishedPostsByCategory } from '@/lib/db/queries';
+import { getCategories, getCategoryBySlug, getCategorySlugs, getPublishedPostsByCategory } from '@/lib/db/queries';
 import { buildMetadata } from '@/lib/seo';
 import { cn } from '@/lib/utils/cn';
 
@@ -14,6 +14,11 @@ interface CategoryPageProps {
 }
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const rows = await getCategorySlugs();
+  return rows.map(({ slug }) => ({ category: slug }));
+}
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const category = await getCategoryBySlug(params.category);

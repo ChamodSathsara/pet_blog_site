@@ -31,6 +31,12 @@ const publishedPostsCached = unstable_cache(
 );
 export const getPublishedPosts = cache(publishedPostsCached);
 
+const publishedPostSlugsCached = unstable_cache(
+  async () => db.select({ slug: posts.slug }).from(posts).where(eq(posts.status, 'published')).orderBy(asc(posts.slug)),
+  ['published-post-slugs'], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['posts'] },
+);
+export const getPublishedPostSlugs = cache(publishedPostSlugsCached);
+
 export const getPublishedPost = cache(async (slug: string) => unstable_cache(async () => {
   const [row] = await joined().where(and(eq(posts.slug, slug), eq(posts.status, 'published'))).limit(1);
   return row ? { post: toPost(row), author: toAuthor(row.author), category: {
@@ -68,6 +74,12 @@ const categoriesCached = unstable_cache(async (): Promise<(Category & { id: stri
     id: category.id, slug: category.slug, name: category.name, description: category.description || '',
   })), ['categories'], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['categories'] });
 export const getCategories = cache(categoriesCached);
+
+const categorySlugsCached = unstable_cache(
+  async () => db.select({ slug: categories.slug }).from(categories).orderBy(asc(categories.slug)),
+  ['category-slugs'], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['categories'] },
+);
+export const getCategorySlugs = cache(categorySlugsCached);
 
 export const getCategoryBySlug = cache(async (slug: string) => unstable_cache(async () => {
   const [category] = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
