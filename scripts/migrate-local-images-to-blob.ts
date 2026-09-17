@@ -17,9 +17,13 @@ async function uploadLocalImage(localUrl: string, token?: string) {
   const extension = path.extname(absolutePath).toLowerCase() || '.jpg';
   const file = await readFile(absolutePath);
   const contentType = extension === '.png' ? 'image/png' : extension === '.webp' ? 'image/webp' : extension === '.gif' ? 'image/gif' : 'image/jpeg';
+  const oidcToken = process.env.VERCEL_OIDC_TOKEN || undefined;
+  const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || process.env.BLOB_READ_WRITE_TOKENS_STORE_ID || undefined;
   const blob = await put(`post-images/migrated-${crypto.randomUUID()}${extension}`, file, {
     access: 'public',
     ...(token ? { token } : {}),
+    ...(!token && oidcToken ? { oidcToken } : {}),
+    ...(!token && storeId ? { storeId } : {}),
     contentType,
   });
   return blob.url;

@@ -13,7 +13,14 @@ export async function POST(request: Request) {
   if (process.env.NODE_ENV === 'production' || process.env.BLOB_READ_WRITE_TOKEN) {
     try {
       const token = process.env.BLOB_READ_WRITE_TOKEN || undefined;
-      const blob = await put(`post-covers/${safeName}`, file, { access: 'public', ...(token ? { token } : {}) });
+      const oidcToken = process.env.VERCEL_OIDC_TOKEN || undefined;
+      const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || process.env.BLOB_READ_WRITE_TOKENS_STORE_ID || undefined;
+      const blob = await put(`post-covers/${safeName}`, file, {
+        access: 'public',
+        ...(token ? { token } : {}),
+        ...(!token && oidcToken ? { oidcToken } : {}),
+        ...(!token && storeId ? { storeId } : {}),
+      });
       return Response.json({ url: blob.url }, { status: 201 });
     } catch (error) {
       console.error('Blob upload failed', error);
