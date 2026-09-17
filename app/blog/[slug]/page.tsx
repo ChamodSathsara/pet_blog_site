@@ -70,7 +70,7 @@ export default async function PostPage({ params }: PostPageProps) {
           path: `/blog/${post.slug}`,
           publishedTime: post.date,
           modifiedTime: post.updatedDate,
-          authorName: author?.name ?? 'Housewise Journal',
+          authorName: author?.name,
         })}
       />
       <JsonLd

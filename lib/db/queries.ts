@@ -7,7 +7,7 @@ import type { Author, Category, Post } from '@/lib/types/post';
 
 const PUBLIC_CACHE_SECONDS = 60;
 
-type JoinedPost = { post: typeof posts.$inferSelect; category: typeof categories.$inferSelect; author: typeof authors.$inferSelect };
+type JoinedPost = { post: typeof posts.$inferSelect; category: typeof categories.$inferSelect; author: typeof authors.$inferSelect | null };
 export interface PublishedPostsPage { posts: Post[]; total: number; page: number; totalPages: number }
 
 const toPost = ({ post, category }: JoinedPost): Post => ({
@@ -17,13 +17,13 @@ const toPost = ({ post, category }: JoinedPost): Post => ({
   seoTitle: post.seoTitle || undefined, metaDescription: post.metaDescription || undefined,
   canonicalUrl: post.canonicalUrl || undefined, noIndex: post.noIndex,
   coverImage: post.coverImageUrl || '/home-maintenance-hero.png', coverAlt: post.coverAlt || post.title,
-  category: category.slug, categoryName: category.name, tags: post.tags, author: post.authorId, content: post.content,
+  category: category.slug, categoryName: category.name, tags: post.tags, author: post.authorId || undefined, content: post.content,
 });
 const toAuthor = (author: typeof authors.$inferSelect): Author => ({
   id: author.id, name: author.name, credentials: author.credentials || '', bio: author.bio || '', avatar: author.avatarUrl || '',
 });
 const joined = () => db.select({ post: posts, category: categories, author: authors }).from(posts)
-  .innerJoin(categories, eq(posts.categoryId, categories.id)).innerJoin(authors, eq(posts.authorId, authors.id));
+  .innerJoin(categories, eq(posts.categoryId, categories.id)).leftJoin(authors, eq(posts.authorId, authors.id));
 
 const publishedPostsCached = unstable_cache(
   async () => (await joined().where(eq(posts.status, 'published')).orderBy(desc(posts.publishedAt))).map(toPost),
@@ -39,7 +39,7 @@ export const getPublishedPostSlugs = cache(publishedPostSlugsCached);
 
 export const getPublishedPost = cache(async (slug: string) => unstable_cache(async () => {
   const [row] = await joined().where(and(eq(posts.slug, slug), eq(posts.status, 'published'))).limit(1);
-  return row ? { post: toPost(row), author: toAuthor(row.author), category: {
+  return row ? { post: toPost(row), author: row.author ? toAuthor(row.author) : null, category: {
     id: row.category.id, slug: row.category.slug, name: row.category.name, description: row.category.description || '',
   } } : null;
 }, ['published-post', slug], { revalidate: PUBLIC_CACHE_SECONDS, tags: ['posts', `post-${slug}`] })());

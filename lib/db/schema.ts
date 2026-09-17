@@ -38,7 +38,7 @@ export const posts = pgTable('posts', {
   coverImageUrl: text('cover_image_url'),
   coverAlt: text('cover_alt'),
   categoryId: uuid('category_id').notNull().references(() => categories.id, { onDelete: 'restrict' }),
-  authorId: uuid('author_id').notNull().references(() => authors.id, { onDelete: 'restrict' }),
+  authorId: uuid('author_id').references(() => authors.id, { onDelete: 'restrict' }),
   tags: text('tags').array().default([]).notNull(),
   status: postStatus('status').default('draft').notNull(),
   publishedAt: timestamp('published_at', { withTimezone: true }),

@@ -81,7 +81,7 @@ interface ArticleJsonLdInput {
   path: string;
   publishedTime: string;
   modifiedTime?: string;
-  authorName: string;
+  authorName?: string;
 }
 
 export function articleJsonLd({
@@ -101,7 +101,7 @@ export function articleJsonLd({
     image: image.startsWith('http') ? image : `${SITE_URL}${image}`,
     datePublished: publishedTime,
     dateModified: modifiedTime || publishedTime,
-    author: { '@type': 'Person', name: authorName },
+    ...(authorName ? { author: { '@type': 'Person', name: authorName } } : {}),
     publisher: {
       '@type': 'Organization',
       name: SITE_NAME,

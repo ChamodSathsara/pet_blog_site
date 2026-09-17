@@ -32,7 +32,7 @@ export interface Post {
   category: string;
   categoryName?: string;
   tags: string[];
-  author: string;
+  author?: string;
   featured?: boolean;
   content: string;
 }
