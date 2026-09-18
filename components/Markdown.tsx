@@ -113,10 +113,18 @@ function Block({ block }: { block: MarkdownBlock }) {
           </div>
         );
       }
+      const isVercelBlob = /^https:\/\/[^/]+\.public\.blob\.vercel-storage\.com\//i.test(block.src);
       return (
         <figure className="mt-8">
           <div className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-border bg-muted">
-            <Image src={block.src} alt={block.alt} fill sizes="(max-width: 768px) 100vw, 760px" className="object-contain" />
+            <Image
+              src={block.src}
+              alt={block.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 760px"
+              className="object-contain"
+              unoptimized={isVercelBlob}
+            />
           </div>
           {block.caption && <figcaption className="mt-2 text-center text-[15px] leading-relaxed text-muted-foreground"><Inline text={block.caption} /></figcaption>}
         </figure>
