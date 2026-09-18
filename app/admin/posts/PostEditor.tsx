@@ -1,5 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { upload } from '@vercel/blob/client';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { ImagePlus, Upload } from 'lucide-react';
@@ -19,14 +20,23 @@ export function PostEditor({ initial, categories, authors }: { initial: Initial;
   const inlineFileRef = useRef<HTMLInputElement>(null);
   const set = (key: keyof Initial, value: unknown) => setForm((current) => ({ ...current, [key]: value }));
   const uploadImage = async (file: File) => {
+    if (file.size > 8 * 1024 * 1024) throw new Error('Choose an image under 8 MB.');
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 30000);
+    const timeout = window.setTimeout(() => controller.abort(), 120000);
     try {
-      const data = new FormData(); data.set('file', file);
-      const response = await fetch('/api/admin/upload', { method: 'POST', body: data, signal: controller.signal });
-      const body = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(body.error || 'Could not upload image.');
-      return body.url as string;
+      const extension = file.name.includes('.') ? `.${file.name.split('.').pop()}` : '';
+      const baseName = file.name.slice(0, extension ? -extension.length : undefined)
+        .replace(/[^a-zA-Z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 60) || 'image';
+      const blob = await upload(`post-images/${baseName}${extension.toLowerCase()}`, file, {
+        access: 'public',
+        handleUploadUrl: '/api/admin/upload',
+        multipart: true,
+        abortSignal: controller.signal,
+      });
+      return blob.url;
     } catch (uploadError) {
       if (uploadError instanceof DOMException && uploadError.name === 'AbortError') throw new Error('Image upload timed out. Please try again.');
       throw uploadError;
