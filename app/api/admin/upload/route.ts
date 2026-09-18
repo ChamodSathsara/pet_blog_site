@@ -15,16 +15,15 @@ export async function POST(request: Request) {
       const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKENS_READ_WRITE_TOKEN || undefined;
       const oidcToken = process.env.VERCEL_OIDC_TOKEN || undefined;
       const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || process.env.BLOB_READ_WRITE_TOKENS_STORE_ID || undefined;
+      const useOidc = Boolean(process.env.VERCEL && oidcToken && storeId);
       const blob = await put(`post-covers/${safeName}`, file, {
         access: 'public',
-        ...(token ? { token } : {}),
-        ...(!token && oidcToken ? { oidcToken } : {}),
-        ...(!token && storeId ? { storeId } : {}),
+        ...(useOidc ? { oidcToken, storeId } : token ? { token } : oidcToken && storeId ? { oidcToken, storeId } : {}),
       });
       return Response.json({ url: blob.url }, { status: 201 });
     } catch (error) {
       console.error('Blob upload failed', error);
-      return Response.json({ error: 'Image storage is not connected to this deployment' }, { status: 503 });
+      return Response.json({ error: 'Image storage authorization failed. Reconnect Blob storage and redeploy.' }, { status: 503 });
     }
   }
   const directory = path.join(process.cwd(), 'public', 'uploads');
